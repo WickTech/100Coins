@@ -1,0 +1,486 @@
+@function gray($color){
+  @return rgb($color, $color, $color);
+}
+
+$shadow1: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+
+$blue: rgb(30, 136, 229);
+$green: rgb(76, 175, 80);
+$red: rgb(198, 40, 40);
+
+@keyframes fadeInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  
+  50% {
+    opacity: 0;
+  }
+  
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(720deg);
+  }
+
+  to {
+    transform: rotate(1440deg);
+  }
+}
+
+body{
+  margin: 0px;
+  overflow: hidden;
+  padding: 0px;
+  
+  input, h1, a, button {
+    color: gray(90);
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+#app {
+  background-color: gray(30);
+  height: 100vh;
+  overflow: hidden;
+  
+  &.list-toggled {
+    #crypto-list {
+      transform: translateX(0px);
+    }
+    
+    #crypto-details {     
+      #crypto-details-content { 
+        margin-left: 480px;
+        width: calc(100% - 480px);
+      }
+    }
+  }
+  .loading-spinner-wrapper {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    
+    .loading-spinner {    
+      animation: spin 2s ease-in-out infinite;    
+      pointer-events: none;
+
+      i {
+        color: white;
+        font-size: 3em;
+      }
+    }
+  }
+  
+  #crypto-list {
+    animation: fadeInFromLeft 0.25s ease-in;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100% - 20px);
+    overflow: auto;
+    padding: 10px;
+    padding-left: 0px;
+    position: relative;
+    transform: translateX(-520px);
+    transition: all 0.25s;
+    width: 500px;
+    z-index: 2;
+    
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+    
+    .crypto-list-item {
+      background-color: gray(20);
+      border: none;
+      border-bottom-right-radius: 1000px;
+      border-top-right-radius: 1000px;
+      cursor: pointer;
+      display: flex;
+      outline: none;
+      padding: 10px;
+      padding-left: 0px;
+      position: relative;
+      transition: all 0.25s;
+      
+      &:hover,
+      &:focus,
+      &.selected {
+        .crypto-list-item-content {
+          width: calc(100% - 120px);
+        }
+      }
+      
+      &.selected {
+        .crypto-list-item-content {
+          background-color: rgba(white, 0.15);
+        }
+      }
+      
+      .crypto-list-item-background {
+        align-items: center;
+        border-radius: 10px;
+        border-bottom-right-radius: 1000px;
+        border-top-right-radius: 1000px;
+        display: flex;
+        height: 100%;
+        left: 0px;
+        overflow: hidden;
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        z-index: 1;
+
+        .crypto-list-item-symbol {
+          color: white;
+          font-size: 8em;
+          font-weight: 500;
+          max-width: calc(100% - 160px);
+          opacity: 0.1;
+          overflow: hidden;
+          position: relative;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+        
+        .crypto-list-item-background-image {
+          background-color: gray(20);
+          border-radius: 1000px;
+          height: 120px;
+          opacity: 0.25;
+          position: absolute;
+          right: 20px;
+          width: 120px;
+          z-index: 2;
+        }
+      }
+        
+      .crypto-list-item-content {
+        align-items: center;
+        backdrop-filter: blur(5px);
+        background-color: rgba(white, 0.05);
+        border-bottom-right-radius: 1000px;
+        border-top-right-radius: 1000px;
+        box-shadow: $shadow1;
+        display: flex; 
+        gap: 20px;
+        padding: 40px;
+        position: relative;
+        transition: all 0.25s;
+        white-space: nowrap;
+        width: calc(100% - 160px);
+        z-index: 2;
+        
+        h1 {
+          color: white;
+          font-size: 1em;
+        }
+        
+        .crypto-list-item-image {
+          border-radius: 1000px;
+          height: 60px;     
+          width: 60px;
+        }
+        
+        .crypto-list-item-rank {
+          font-size: 1.25em;
+          font-weight: 500;
+          text-align: right;
+          width: 40px;
+        }
+        
+        .crypto-list-item-details {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          text-align: left;
+          width: 240px;
+          
+          .crypto-list-item-name {
+            font-size: 1.75em;
+          }
+        }
+      }
+    }
+  }
+  
+  #crypto-details {
+    animation: fadeInFromLeft 0.25s ease-in;
+    height: 100vh;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    z-index: 1;
+    
+    &.transitioning {
+      #crypto-details-content {
+        #crypto-fields {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        
+        #crypto-details-background-image {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+                
+        #crypto-details-symbol {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+      }
+    }
+    
+    #crypto-details-content {
+      border-left: 1px solid rgba(white, 0.05);
+      height: 100%;
+      margin-left: 0px; 
+      min-width: 300px;
+      position: relative;
+      transition: all 0.25s;
+      width: calc(100% - 1px);
+      
+      #crypto-fields {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        padding-left: 40px;
+        padding-top: 20px;
+        position: relative;
+        transition: all 0.25s;
+        z-index: 3;
+        
+        .crypto-field {
+          white-space: nowrap;
+          
+          &.positive {
+            .crypto-field-value {
+              color: $green;
+            }
+          }          
+          
+          &.negative {
+            .crypto-field-value {
+              color: $red;
+            }
+          }          
+          
+          .crypto-field-value {
+            color: white;
+            font-size: 1.5em;
+          }
+          
+          .crypto-field-label {
+            color: rgba(white, 0.5);
+            font-size: 0.8em;
+            font-weight: 500;
+            text-transform: uppercase;
+          }
+        }
+      }
+      
+      #crypto-price-chart-wrapper {
+        height: 100%;
+        left: 0px;
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        z-index: 2;
+        
+        #crypto-price-chart-loading-spinner {
+          bottom: 0px;
+          height: 100px;
+          left: 0px;
+          position: absolute;
+          width: 100px;
+          z-index: 2;
+          
+          .loading-spinner {
+            i {
+              font-size: 2em;
+            }
+          }
+        }
+        
+        #crypto-price-chart {
+          height: 100%;
+          position: relative;
+          width: 100%;
+        }
+      }
+
+      #crypto-details-symbol {
+        bottom: 0px;
+        color: white;
+        filter: blur(5px);
+        font-size: 20em;
+        font-weight: 500;
+        left: 0px;
+        margin: 20px;
+        opacity: 0.15;
+        position: absolute;
+        text-transform: uppercase;
+        transition: all 0.25s;
+        z-index: 1;
+      }
+    }
+  }
+  
+  #crypto-list-toggle-button {
+    background-color: gray(30);
+    border: none;
+    border-radius: 100px;
+    box-shadow: $shadow1;
+    bottom: 0px;
+    cursor: pointer;
+    margin: 20px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    z-index: 3;
+    
+    &:hover,
+    &:focus {
+      i {
+        color: $blue;
+      }
+    }
+    
+    i {
+      color: white;
+      font-size: 2em;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      width: 30px;
+    }
+  }
+  
+  #youtube-link {
+    align-items: center;
+    border-radius: 6px;
+    display: flex;
+    gap: 10px;
+    margin: 10px;
+    padding: 10px;
+    position: absolute;
+    right: 0px;
+    text-decoration: none;
+    top: 0px;
+    z-index: 1;
+    
+    &:hover,
+    &:focus {
+      backdrop-filter: blur(5px);
+      background-color: rgba(white, 0.1);
+    }
+
+    i {
+      color: $red;
+      font-size: 1.5em;
+    }
+    
+    h1 {      
+      color: white;
+      font-size: 1.25em;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  #app {    
+    &.list-toggled {
+      #crypto-list {
+        width: calc(100% - 10px);
+      }
+      
+      #crypto-details {     
+        #crypto-details-content { 
+          margin-left: 100%;
+          width: calc(100% - 1px);
+        }
+      }        
+    }    
+    
+    #crypto-details {     
+      #crypto-details-content { 
+        #crypto-fields {
+          padding-left: 20px;
+        }
+        
+        #crypto-details-symbol {
+          font-size: 10em; 
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  #app {   
+    #crypto-list {
+      .crypto-list-item {
+        &:hover,
+        &:focus,
+        &.selected {
+          .crypto-list-item-content {
+            width: calc(100% - 80px);
+          }
+        }
+      
+        .crypto-list-item-background {
+          .crypto-list-item-symbol {
+            font-size: 6em;
+          }
+          
+          .crypto-list-item-background-image {
+            height: 80px;
+            width: 80px;
+          }
+        }
+        
+        .crypto-list-item-content {
+          padding: 20px;
+          width: calc(100% - 120px);
+          
+          .crypto-list-item-details {
+            .crypto-list-item-name {
+              font-size: 1.25em;
+            }
+          }
+        }
+      }
+    }
+    
+    #youtube-link {
+      i {
+        font-size: 1.25em;
+      }
+      
+      h1 {
+        font-size: 1em;
+      }
+    }
+  }
+}
