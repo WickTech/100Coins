@@ -1,5 +1,5 @@
 # Cryto List
-![preview](./preview.png)
+![preview](./pre.png)
 
 # Live Site
 https://100-coins.vercel.app/
