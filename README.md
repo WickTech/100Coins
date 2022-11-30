@@ -1,5 +1,5 @@
-# Cryto List
-![preview](./pre.png)
+# 100-Coins Cryto List
+<img src="pre.png" width="800"/>
 
 # Live Site
 https://100-coins.vercel.app/
